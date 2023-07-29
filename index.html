@@ -1,40 +1,198 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
 
-		<title>reveal.js</title>
+    <title>reveal.js</title>
 
-		<link rel="stylesheet" href="dist/reset.css">
-		<link rel="stylesheet" href="dist/reveal.css">
-		<link rel="stylesheet" href="dist/theme/black.css">
+    <link rel="stylesheet" href="dist/reset.css" />
+    <link rel="stylesheet" href="dist/reveal.css" />
+    <link rel="stylesheet" href="dist/theme/black.css" />
 
-		<!-- Theme used for syntax highlighted code -->
-		<link rel="stylesheet" href="plugin/highlight/monokai.css">
-	</head>
-	<body>
-		<div class="reveal">
-			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
-			</div>
-		</div>
+    <!-- Theme used for syntax highlighted code -->
+    <link rel="stylesheet" href="plugin/highlight/monokai.css" />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Event Emitter</h1>
+        </section>
+        <section>
+          <h4>What is Event Emiter?</h4>
+          <p>
+            At its core, Event Emitter is a fundamental design pattern used in
+            various programming languages to facilitate communication between
+            different components of an application.
+          </p>
+          <p>
+            It enables these components to interact with each other without
+            being directly coupled, promoting a more flexible and maintainable
+            codebase.
+          </p>
+        </section>
+        <section>
+          <h4>How does Event Emiter works?</h4>
+          <p>
+            Event Emitter works on the principle of two main entities: the Event
+            Emitter itself and the listeners. The Event Emitter serves as a
+            centralized hub that emits events, and listeners are registered to
+            listen for specific events of interest.
+          </p>
+        </section>
+        <section>
+          <section>
+            <h6>Code - EventEmitter</h6>
+            <pre data-id="code-animation">
+					  <code class="hljs typescript">
+						  export type Listener&#10094;T&#10095; = (event: T) => void;
+	  
+						  export class EventEmitter&#10094;T&#10095; {
+							  private listeners: Listener&#10094;T&#10095;[] = [];
+	  
+							  ...methods
+						  }
+					  </code>
+				  </pre>
+          </section>
+          <section>
+            <h6>Code - methods</h6>
+            <ul>
+              <li>addListener</li>
+              <li>removeListener</li>
+              <li>clearListeners(optional)</li>
+              <li>emit</li>
+            </ul>
+          </section>
+          <section>
+            <h6>Code - addListener</h6>
+            <pre data-id="code-animation">
+					  <code class="hljs typescript">
+						  public addListener(listener: Listener&#10094;T&#10095;): void {
+						  this.listeners.push(listener);
+						  }
+					  </code>
+				  </pre>
+          </section>
+          <section>
+            <h6>Code - removeListener</h6>
+            <pre data-id="code-animation">
+						<code class="hljs typescript">
+						  public removeListener(listener: Listener&#10094;T&#10095;): void {
+							  const index = this.listeners.indexOf(listener);
+							  if (index > -1) {
+								this.listeners.splice(index, 1);
+							  }
+							}
+						</code>
+					</pre>
+          </section>
+          <section>
+            <h6>Code - clearListeners(optional)</h6>
+            <pre data-id="code-animation">
+						<code class="hljs typescript">
+						  public clearListeners(): void {
+							  this.listeners = [];
+							}
+						</code>
+					</pre>
+          </section>
+          <section>
+            <h6>Code - emit</h6>
+            <pre data-id="code-animation">
+						<code class="hljs typescript">
+						  public emit(event: T): void {
+							  this.listeners.forEach((listener) => {
+								listener(event);
+							  });
+							}
+						</code>
+					</pre>
+          </section>
+        </section>
+        <section>
+          <section>
+            <h6>How it use - create instance</h6>
+            <pre data-id="code-animation">
+				  <code class="hljs typescript">
+import { EventEmitter } from "./modules/EventEmitter.js";
 
-		<script src="dist/reveal.js"></script>
-		<script src="plugin/notes/notes.js"></script>
-		<script src="plugin/markdown/markdown.js"></script>
-		<script src="plugin/highlight/highlight.js"></script>
-		<script>
-			// More info about initialization & config:
-			// - https://revealjs.com/initialization/
-			// - https://revealjs.com/config/
-			Reveal.initialize({
-				hash: true,
+export const door = new EventEmitter&#10094;string&#10095;();
+				  </code>
+			  </pre>
+          </section>
+          <section>
+            <h6>How it use - add listener</h6>
+            <pre data-id="code-animation">
+					<code class="hljs typescript">
+					  import { door } from "./modules/App.js";
+						
+						const listener = (event: string): void => {
+							if (event === "WOOF!") {
+							  console.log("PERSON OPEN THE DOOR!");
+							}
+						};
+							  
+						door.addListener(listener);
+					</code>
+				</pre>
+          </section>
+          <section>
+            <h6>How it use - emit</h6>
+            <pre data-id="code-animation">
+					<code class="hljs typescript">
+						  import { door } from "./modules/App.js";
+		  
+						  door.emit("WOOF!"); // emit "WOOF!" to door instance
+						  door.emit("BFF!"); // emit "BFF!" to door instance
+	  
+						  door.clearListeners();
+	  
+						  door.emit("BBWOOF!!!"); // nothing to emit!
+					</code>
+				</pre>
+          </section>
+        </section>
+        <section>
+          <h6>Benefits</h6>
+          <ul>
+            <li>Loose Coupling</li>
+            <li>Flexibility and Extensibility</li>
+            <li>Asynchronous Communication</li>
+            <li>Event Aggregation</li>
+            <li>Decoupled Error Handling</li>
+            <li>Event Logging and Debugging</li>
+            <li>Event Composition</li>
+            <li>Interoperability</li>
+          </ul>
+        </section>
+        <section>
+          <h6>Thank You!</h6>
+          <a href="https://youtu.be/1ndt3_3JKa4"
+            >See my another video about EventEmitter</a
+          >
+        </section>
+      </div>
+    </div>
 
-				// Learn about plugins: https://revealjs.com/plugins/
-				plugins: [ RevealMarkdown, RevealHighlight, RevealNotes ]
-			});
-		</script>
-	</body>
+    <script src="dist/reveal.js"></script>
+    <script src="plugin/notes/notes.js"></script>
+    <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/highlight/highlight.js"></script>
+    <script>
+      // More info about initialization & config:
+      // - https://revealjs.com/initialization/
+      // - https://revealjs.com/config/
+      Reveal.initialize({
+        hash: true,
+
+        // Learn about plugins: https://revealjs.com/plugins/
+        plugins: [RevealMarkdown, RevealHighlight, RevealNotes],
+      });
+    </script>
+  </body>
 </html>

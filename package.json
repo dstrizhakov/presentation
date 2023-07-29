@@ -13,9 +13,9 @@
     "build": "gulp build"
   },
   "author": {
-    "name": "Hakim El Hattab",
-    "email": "hakim.elhattab@gmail.com",
-    "web": "https://hakim.se"
+    "name": "Dmitry Strizhakov",
+    "email": "d.strizhakov@gmail.com",
+    "web": ""
   },
   "repository": {
     "type": "git",
